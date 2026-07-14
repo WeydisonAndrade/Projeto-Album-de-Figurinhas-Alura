@@ -2,34 +2,43 @@
 <html lang="pt-BR">
 
 <head>
+    <!-- Configurações básicas de metadados e responsividade -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alura Album - Copa do Mundo Tech</title>
-    <!-- Google Fonts -->
+    
+    <!-- Google Fonts: Importação das fontes Inter (corpo) e Outfit (títulos/destaques) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap"
-        rel="stylesheet">
-    <!-- Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Folha de estilos principal do projeto -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- Sound Control -->
+    <!-- ===================================================
+         CONTROLE DE SOM
+         Botão flutuante para ativar/desativar os efeitos sonoros de papel
+         =================================================== -->
     <button id="sound-toggle" class="sound-btn" aria-label="Alternar som">
+        <!-- Ícone: Som Ativado (visível por padrão) -->
         <svg class="sound-icon-on" viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor"
                 d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
         </svg>
+        <!-- Ícone: Som Mutado (oculto por padrão via classe .hidden) -->
         <svg class="sound-icon-off hidden" viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor"
                 d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.5C15.58,18 14.83,18.4 14,18.71V20.77C15.38,20.44 16.63,19.78 17.7,18.9L20.73,21.93L22,20.66L4.27,3M14,3.23V5.29C14.73,5.5 15.43,5.83 16.07,6.26L14.59,7.74C14.41,7.65 14.21,7.58 14,7.54V9.54L19,14.54C19,13.7 19,12.85 19,12C19,7.72 16,4.14 14,3.23M16.5,12C16.5,11.2 16.1,10.5 15.5,10.05L14,11.55V12.45L15.46,13.9C15.48,13.28 16.5,12.62 16.5,12Z" />
         </svg>
     </button>
 
-    <!-- Navigation Arrows -->
+    <!-- ===================================================
+         BOTÕES DE NAVEGAÇÃO
+         Setas flutuantes laterais para folhear o álbum
+         =================================================== -->
     <button id="btn-prev" class="nav-btn nav-btn-left" aria-label="Página Anterior">
         <svg viewBox="0 0 24 24" width="36" height="36">
             <path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
@@ -41,23 +50,35 @@
         </svg>
     </button>
 
-    <!-- Album Container -->
+    <!-- ===================================================
+         CONTAINER DO ÁLBUM (VIEWPORT)
+         Espaço de visualização que aplica a perspectiva 3D
+         =================================================== -->
     <div class="album-viewport" id="album-viewport">
+        <!-- O Livro de Páginas (Flip Book) -->
         <div class="flip-book" id="book">
 
-            <!-- PAGINA 0: CAPA -->
+            <!-- ===================================================
+                 PÁGINA 0: CAPA DO ÁLBUM (DURA / HARD)
+                 =================================================== -->
             <div class="page page-cover" data-density="hard">
                 <div class="page-content cover-content">
+                    <!-- Selo de autenticidade no topo -->
                     <div class="cover-header">
                         <span class="cover-seal">COLEÇÃO OFICIAL</span>
                     </div>
+                    
+                    <!-- Corpo da capa com títulos estilizados e arte central -->
                     <div class="cover-body">
+                        <!-- Títulos com efeito de glitch cibernético -->
                         <h1 class="cover-title glitch" data-text="ALURA">ALURA</h1>
                         <h2 class="cover-subtitle glitch" data-text="ALBUM">ALBUM</h2>
+                        
+                        <!-- Box de arte da capa com elementos flutuantes e animações -->
                         <div class="cover-art">
                             <div class="art-grid"></div>
 
-                            <!-- Floating Mini Cards Silhouette Collage -->
+                            <!-- Mini miniaturas de figurinhas flutuantes com rotação (efeito colagem) -->
                             <div class="mini-card mc-turing">
                                 <div class="mc-avatar">AI</div>
                                 <span class="mc-num">#01</span>
@@ -71,7 +92,7 @@
                                 <span class="mc-num">#20</span>
                             </div>
 
-                            <!-- Central Glowing 3D Tech Sphere -->
+                            <!-- Esfera tecnológica 3D centralizada com anéis orbitais giratórios -->
                             <div class="tech-sphere">
                                 <div class="sphere-core">
                                     <svg class="art-logo" viewBox="0 0 24 24">
@@ -84,20 +105,26 @@
                         </div>
                         <p class="cover-footer-text">A SELEÇÃO DE GIGANTES DA TECNOLOGIA</p>
                     </div>
+                    
+                    <!-- Rodapé da capa -->
                     <div class="cover-footer">
                         <span>2026 IMERSÃO JULHO</span>
                     </div>
                 </div>
             </div>
 
-            <!-- PAGINA 1: IA -->
+            <!-- ===================================================
+                 PÁGINA 1: INTELIGÊNCIA ARTIFICIAL (ESQUERDA)
+                 =================================================== -->
             <div class="page page-left">
                 <div class="page-content">
                     <div class="page-header">
                         <span class="tech-badge badge-ia">IA</span>
                         <h3 class="page-title">Pioneiros da Inteligência Artificial</h3>
                     </div>
+                    <!-- Grade de slots das figurinhas -->
                     <div class="stickers-grid">
+                        <!-- Cada slot possui número, nome da personalidade e sua descrição/função -->
                         <div class="sticker-slot">
                             <div class="slot-number">#01</div>
                             <div class="slot-name">Alan Turing</div>
@@ -108,6 +135,7 @@
                             <div class="slot-name">John McCarthy</div>
                             <div class="slot-role">Criou o termo "Artificial Intelligence"</div>
                         </div>
+                        <!-- Slot Especial: ocupa duas colunas na grade -->
                         <div class="sticker-slot special-slot">
                             <div class="slot-number">#03</div>
                             <div class="slot-name">Sam Altman</div>
@@ -128,7 +156,9 @@
                 </div>
             </div>
 
-            <!-- PAGINA 2: PYTHON -->
+            <!-- ===================================================
+                 PÁGINA 2: PYTHON (DIREITA)
+                 =================================================== -->
             <div class="page page-right">
                 <div class="page-content">
                     <div class="page-header">
@@ -166,7 +196,9 @@
                 </div>
             </div>
 
-            <!-- PAGINA 3: BANCO DE DADOS -->
+            <!-- ===================================================
+                 PÁGINA 3: BANCO DE DADOS (ESQUERDA)
+                 =================================================== -->
             <div class="page page-left">
                 <div class="page-content">
                     <div class="page-header">
@@ -204,7 +236,9 @@
                 </div>
             </div>
 
-            <!-- PAGINA 4: SISTEMAS OPERACIONAIS -->
+            <!-- ===================================================
+                 PÁGINA 4: SISTEMAS OPERACIONAIS (DIREITA)
+                 =================================================== -->
             <div class="page page-right">
                 <div class="page-content">
                     <div class="page-header">
@@ -242,7 +276,9 @@
                 </div>
             </div>
 
-            <!-- PAGINA 5: BRASIL - PARTE 1 -->
+            <!-- ===================================================
+                 PÁGINA 5: BRASIL - PARTE 1 (ESQUERDA)
+                 =================================================== -->
             <div class="page page-left">
                 <div class="page-content">
                     <div class="page-header">
@@ -280,7 +316,9 @@
                 </div>
             </div>
 
-            <!-- PAGINA 6: BRASIL - PARTE 2 -->
+            <!-- ===================================================
+                 PÁGINA 6: BRASIL - PARTE 2 (DIREITA)
+                 =================================================== -->
             <div class="page page-right">
                 <div class="page-content">
                     <div class="page-header">
@@ -308,6 +346,7 @@
                             <div class="slot-name">Rafaela Ballerini</div>
                             <div class="slot-role">Alura / Tech Educator</div>
                         </div>
+                        <!-- Slot interativo final para o próprio usuário -->
                         <div class="sticker-slot">
                             <div class="slot-number">#30</div>
                             <div class="slot-name">Você</div>
@@ -318,24 +357,29 @@
                 </div>
             </div>
 
-            <!-- PAGINA 7: CONTRACAPA -->
+            <!-- ===================================================
+                 PÁGINA 7: CONTRACAPA (DURA / HARD)
+                 =================================================== -->
             <div class="page page-cover-back" data-density="hard">
                 <div class="page-content cover-back-content">
                     <div class="cover-back-header">
                         <h2>ALURA ALBUM</h2>
                     </div>
                     <div class="cover-back-body">
+                        <!-- Colagem de categorias com estilo tecnológico -->
                         <div class="tech-logo-collage">
-                            <span>IA</span> • <span>PYTHON</span> • <span>BANCO DE DADOS</span> • <span>SISTEMAS
-                                OPERACIONAIS</span> • <span>DEV'S DO BRASIL</span>
+                            <span>IA</span> • <span>PYTHON</span> • <span>BANCO DE DADOS</span> • <span>SISTEMAS OPERACIONAIS</span> • <span>DEV'S DO BRASIL</span>
                         </div>
+                        
+                        <!-- Texto resumo do álbum -->
                         <p class="summary-text">
                             O Alura Album é um tributo interativo à história e evolução do desenvolvimento de software.
                             Juntando as mentes mais brilhantes nacionais e internacionais que moldam o futuro tech.
                         </p>
+                        
+                        <!-- Código de barras simulado com CSS -->
                         <div class="barcode-container">
                             <div class="barcode">
-                                <!-- Simulated barcode lines -->
                                 <div class="bar"></div>
                                 <div class="bar thin"></div>
                                 <div class="bar"></div>
@@ -350,6 +394,8 @@
                             <span class="barcode-number">9 788575 228494</span>
                         </div>
                     </div>
+                    
+                    <!-- Rodapé da contracapa -->
                     <div class="cover-back-footer">
                         <span>Imersão Julho • Alura • 2026</span>
                     </div>
@@ -359,9 +405,13 @@
         </div>
     </div>
 
-    <!-- Page Flip Library -->
+    <!-- ===================================================
+         DEPENDÊNCIAS E JAVASCRIPT
+         =================================================== -->
+    <!-- Biblioteca St.PageFlip: Responsável pela física e animações tridimensionais de virada de página -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
-    <!-- Logic -->
+    
+    <!-- Script de controle principal da lógica da aplicação -->
     <script src="app.js"></script>
 </body>
 

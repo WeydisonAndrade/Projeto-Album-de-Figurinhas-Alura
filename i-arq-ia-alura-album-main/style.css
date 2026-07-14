@@ -1,18 +1,24 @@
+/* ===================================================
+   1. VARIÁVEIS DE DESIGN SYSTEM E CONFIGURAÇÕES GERAIS
+   Definição da paleta de cores corporativa e resets globais
+   =================================================== */
 :root {
-  --color-blue-universe: #010C53;
-  --color-deep-blue: #011676;
-  --color-tech-blue: #0429BC;
-  --color-dev-blue: #1F53E5;
-  --color-new-black: #0D0D0D;
-  --color-white-snow: #F4F5F6;
+  --color-blue-universe: #010C53; /* Azul profundo do universo de fundo */
+  --color-deep-blue: #011676;     /* Azul escuro intermediário */
+  --color-tech-blue: #0429BC;     /* Azul padrão tecnológico */
+  --color-dev-blue: #1F53E5;      /* Azul vibrante de desenvolvedor */
+  --color-new-black: #0D0D0D;     /* Preto profundo de fundo */
+  --color-white-snow: #F4F5F6;    /* Branco acinzentado para leitura confortável */
 }
 
+/* Reset de margens, preenchimentos e box-sizing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilo do corpo da página com gradiente radial simulando fundo espacial */
 body {
   background-color: var(--color-new-black);
   background-image: radial-gradient(circle at center, var(--color-deep-blue) 0%, var(--color-blue-universe) 60%, var(--color-new-black) 100%);
@@ -26,7 +32,12 @@ body {
   position: relative;
 }
 
-/* Sound & Control UI */
+/* ===================================================
+   2. CONTROLES DE INTERFACE (SOM E NAVEGAÇÃO)
+   Botões flutuantes para interação
+   =================================================== */
+
+/* Botão flutuante de ativação de som (canto superior direito) */
 .sound-btn {
   position: absolute;
   top: 20px;
@@ -52,11 +63,12 @@ body {
   transform: scale(1.05);
 }
 
+/* Classe utilitária para esconder elementos (como ícones de som) */
 .hidden {
   display: none !important;
 }
 
-/* Navigation UI */
+/* Setas flutuantes de navegação lateral */
 .nav-btn {
   position: absolute;
   top: 50%;
@@ -92,7 +104,12 @@ body {
   right: 30px;
 }
 
-/* Album Layout Container */
+/* ===================================================
+   3. ESTRUTURA FÍSICA E LAYOUT DO ÁLBUM
+   Configuração do viewport e páginas individuais do flip book
+   =================================================== */
+
+/* Container de visualização que cria o efeito tridimensional (perspectiva) */
 .album-viewport {
   position: relative;
   width: 1100px;
@@ -103,32 +120,33 @@ body {
   perspective: 1500px;
 }
 
+/* O livro contendo as páginas do álbum */
 .flip-book {
   box-shadow: 0 35px 80px rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   overflow: hidden;
   background-color: transparent;
-  display: none; /* Shown after initialization */
+  display: none; /* Exibido via JS após inicialização completa da lib */
 }
 
-/* Individual Pages */
+/* Páginas individuais */
 .page {
   width: 550px;
   height: 800px;
   background-color: var(--color-white-snow);
   overflow: hidden;
-  cursor: grab; /* Mão aberta indicando que a página pode ser "agarrada" */
-  user-select: none; /* Impede seleção de texto ao arrastar a página */
+  cursor: grab; /* Cursor de mão aberta sugerindo que a página pode ser folheada */
+  user-select: none; /* Evita que o usuário selecione textos ao arrastar a página */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
 .page:active {
-  cursor: grabbing; /* Mão fechada durante o clique na página */
+  cursor: grabbing; /* Cursor de mão fechada durante a ação de arrastar a página */
 }
 
-/* Global dragging cursor override */
+/* Cursor global forçado durante o arraste */
 body.dragging, 
 body.dragging * {
   cursor: grabbing !important;
@@ -136,6 +154,7 @@ body.dragging * {
   -webkit-user-select: none !important;
 }
 
+/* Espaçamento interno padrão para o conteúdo das páginas */
 .page-content {
   width: 100%;
   height: 100%;
@@ -145,7 +164,8 @@ body.dragging * {
   position: relative;
 }
 
-/* Page Lombada Crease Shadows */
+/* Sombras de dobra de página (Lombada central realista)
+   Aplica um gradiente de sombra nas bordas internas das páginas esquerda/direita */
 .page:nth-child(even):not(:last-child) .page-content::after {
   content: '';
   position: absolute;
@@ -170,7 +190,7 @@ body.dragging * {
   z-index: 10;
 }
 
-/* Page Header & Badge */
+/* Cabeçalho padrão das páginas internas */
 .page-header {
   margin-bottom: 25px;
   display: flex;
@@ -180,6 +200,7 @@ body.dragging * {
   padding-bottom: 12px;
 }
 
+/* Badges (tags) coloridas para cada categoria tecnológica no cabeçalho */
 .tech-badge {
   align-self: flex-start;
   padding: 4px 12px;
@@ -203,7 +224,12 @@ body.dragging * {
   color: var(--color-deep-blue);
 }
 
-/* Stickers Grid Layout */
+/* ===================================================
+   4. LAYOUT DOS SLOTS DE FIGURINHAS (GRID)
+   Definições para os slots vazios que aguardam figurinhas
+   =================================================== */
+
+/* Grade de figurinhas dividida em 2 colunas */
 .stickers-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -212,7 +238,7 @@ body.dragging * {
   flex: 1;
 }
 
-/* Individual Sticker Slots */
+/* Slot individual padrão */
 .sticker-slot {
   background-color: rgba(1, 22, 118, 0.03);
   border: 2px dashed rgba(4, 41, 188, 0.35);
@@ -234,6 +260,7 @@ body.dragging * {
   box-shadow: inset 0 0 10px rgba(31, 83, 229, 0.1);
 }
 
+/* Slot especial com destaque (ocupa duas colunas de largura na grade) */
 .special-slot {
   grid-column: span 2;
   justify-self: center;
@@ -243,6 +270,7 @@ body.dragging * {
   background-color: rgba(31, 83, 229, 0.02);
 }
 
+/* Círculo do número do slot (#01, #02, etc.) */
 .slot-number {
   font-family: 'Outfit', sans-serif;
   font-size: 1.8rem;
@@ -278,10 +306,11 @@ body.dragging * {
 }
 
 /* ===================================================
-   FIGURINHAS PREENCHIDAS (adicionado no Dia 3)
-   Estilos para as imagens inseridas via JavaScript
+   5. FIGURINHAS COLADAS (DINÂMICO - DIA 3)
+   Estilos aplicados quando as imagens são inseridas pelo app.js
    =================================================== */
 
+/* A figurinha colada */
 .sticker-img {
   position: absolute;
   inset: 0;
@@ -294,19 +323,19 @@ body.dragging * {
   animation: sticker-aparecer 0.5s ease-out forwards;
 }
 
-/* Slot com imagem: remove padding e corta o overflow */
+/* Ajusta o padding e overflow quando o slot possui uma imagem ativa */
 .sticker-slot:has(.sticker-img) {
   padding: 0;
   overflow: hidden;
 }
 
-/* Esconde número e role quando há imagem no slot */
+/* Oculta textos e números quando a figurinha já está colada */
 .sticker-slot:has(.sticker-img) .slot-number,
 .sticker-slot:has(.sticker-img) .slot-role {
   display: none;
 }
 
-/* Nome como overlay centralizado na base da imagem */
+/* Nome estilizado em overlay na parte inferior da imagem da figurinha */
 .sticker-slot:has(.sticker-img) .slot-name {
   position: absolute;
   bottom: 0;
@@ -325,7 +354,7 @@ body.dragging * {
   pointer-events: none;
 }
 
-/* Animação de "colar" a figurinha */
+/* Efeito/Animação de fade-in e escala simulando colar a figurinha física */
 @keyframes sticker-aparecer {
   from {
     opacity: 0;
@@ -337,7 +366,7 @@ body.dragging * {
   }
 }
 
-/* Slot quando a figurinha está colada (imagem carregou com sucesso) */
+/* Slot com imagem carregada com sucesso */
 .slot-preenchido {
   border-style: solid !important;
   border-color: var(--color-dev-blue) !important;
@@ -348,7 +377,7 @@ body.dragging * {
   box-shadow: 0 4px 16px rgba(31, 83, 229, 0.2) !important;
 }
 
-/* Page Footer */
+/* Rodapé padrão das páginas internas */
 .page-footer {
   margin-top: 15px;
   font-size: 0.8rem;
@@ -359,7 +388,10 @@ body.dragging * {
   padding-top: 8px;
 }
 
-/* CAPA (Cover) CSS */
+/* ===================================================
+   6. CAPA DO ÁLBUM (COVER DESIGN)
+   Aparência futurista com temática cyberpunk/neon
+   =================================================== */
 .page-cover {
   background-color: #070709;
   background-image: radial-gradient(circle at center, #0e1220 0%, #060608 100%);
@@ -375,6 +407,7 @@ body.dragging * {
   text-align: center;
 }
 
+/* Selo de "Coleção Oficial" com brilho refletivo */
 .cover-seal {
   background: rgba(0, 240, 255, 0.04);
   border: 1.5px solid rgba(0, 240, 255, 0.45);
@@ -415,7 +448,7 @@ body.dragging * {
   gap: 10px;
 }
 
-/* Glitch Typography Effect */
+/* Efeito de Glitch cromático nos textos principais da capa */
 .glitch {
   position: relative;
   color: var(--color-white-snow);
@@ -493,6 +526,7 @@ body.dragging * {
   text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
 }
 
+/* Moldura para arte da capa com fundo quadriculado (grid) */
 .cover-art {
   position: relative;
   width: 250px;
@@ -507,6 +541,7 @@ body.dragging * {
   overflow: hidden;
 }
 
+/* Grid de linhas neon ao fundo da arte */
 .art-grid {
   position: absolute;
   width: 100%;
@@ -517,7 +552,7 @@ body.dragging * {
     linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
 }
 
-/* Floating Mini Cards Collage */
+/* Mini figurinhas decorativas flutuando em colagem na capa */
 .mini-card {
   position: absolute;
   width: 50px;
@@ -563,6 +598,7 @@ body.dragging * {
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* Animações e posições das mini figurinhas decorativas */
 .mc-turing {
   top: 25px;
   left: 25px;
@@ -599,7 +635,7 @@ body.dragging * {
   50% { transform: rotate(18deg) translateY(-5px); }
 }
 
-/* Central Glowing 3D Tech Sphere */
+/* Esfera tecnológica central tridimensional que pulsa */
 .tech-sphere {
   position: relative;
   width: 110px;
@@ -631,6 +667,7 @@ body.dragging * {
   fill: none;
 }
 
+/* Anéis de energia orbitando a esfera tecnológica */
 .sphere-ring {
   position: absolute;
   width: 100%;
@@ -688,7 +725,10 @@ body.dragging * {
   opacity: 0.5;
 }
 
-/* CREDITS PAGE CSS */
+/* ===================================================
+   7. PÁGINA DE CRÉDITOS
+   Formatação do bloco de texto explicativo
+   =================================================== */
 .credits-content {
   background-color: var(--color-white-snow);
 }
@@ -747,7 +787,10 @@ body.dragging * {
   margin-top: 15px;
 }
 
-/* CONTRACAPA (Back Cover) CSS */
+/* ===================================================
+   8. CONTRACAPA DO ÁLBUM (BACK COVER DESIGN)
+   Visual limpo e profissional contendo código de barras
+   =================================================== */
 .page-cover-back {
   background-color: var(--color-blue-universe);
   background-image: linear-gradient(225deg, var(--color-blue-universe) 0%, var(--color-new-black) 100%);
@@ -793,6 +836,7 @@ body.dragging * {
   max-width: 85%;
 }
 
+/* Container do código de barras simulação */
 .barcode-container {
   display: flex;
   flex-direction: column;
@@ -811,6 +855,7 @@ body.dragging * {
   gap: 2px;
 }
 
+/* Barras individuais do código de barras */
 .bar {
   width: 3px;
   height: 100%;
@@ -837,7 +882,12 @@ body.dragging * {
   opacity: 0.5;
 }
 
-/* Responsiveness & Mobile Adaptations */
+/* ===================================================
+   9. MEDIA QUERIES E ADAPTAÇÃO RESPONSIVA
+   Redimensiona o álbum para diferentes resoluções de tela
+   =================================================== */
+
+/* Notebooks e telas intermediárias (abaixo de 1200px) */
 @media (max-width: 1200px) {
   .album-viewport {
     width: 900px;
@@ -901,8 +951,9 @@ body.dragging * {
   }
 }
 
+/* Tablets e dispositivos Mobile (abaixo de 768px)
+   Adapta o álbum para visualização em modo página única (single page) */
 @media (max-width: 768px) {
-  /* In portrait/mobile mode, StPageFlip will show single pages */
   .album-viewport {
     width: 100%;
     max-width: 480px;
@@ -960,7 +1011,7 @@ body.dragging * {
     transform: scale(0.65);
   }
   .mini-card {
-    display: none !important;
+    display: none !important; /* Esconde mini figurinhas em telas muito pequenas */
   }
   .nav-btn {
     width: 44px;
