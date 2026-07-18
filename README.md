@@ -53,4 +53,4 @@ O projeto é estruturado em três arquivos fundamentais na pasta principal:
 * **Web Audio API**: Síntese sonora procedural do efeito de papel.
 * **Biblioteca St.PageFlip**: Mecânica avançada para folheamento 3D.
 
-link: https://lnkd.in/dKJPcFGx
+link: https://projeto-album-de-figurinhas-alura-n.vercel.app/
