@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 # Cria a instância da aplicação FastAPI
 app = FastAPI()
@@ -19,10 +20,17 @@ app.add_middleware(
 PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
 PASTA_IMAGENS = os.path.join(PASTA_BASE, "figurinhas")
 PASTA_FRONTEND = os.path.join(PASTA_BASE, "i-arq-ia-alura-album-main")
+PASTA_PUBLIC = os.path.join(PASTA_BASE, "public")
 
-# Na Vercel, o front e as imagens saem de public/ (CDN).
-# Em desenvolvimento local, o FastAPI continua servindo esses estáticos.
-RODANDO_NA_VERCEL = bool(os.getenv("VERCEL"))
+# Preferir public/ (build da Vercel); senão usa as pastas originais do repositório
+if os.path.isdir(os.path.join(PASTA_PUBLIC, "imgs")):
+    DIR_IMGS = os.path.join(PASTA_PUBLIC, "imgs")
+    DIR_FRONT = PASTA_PUBLIC
+else:
+    DIR_IMGS = PASTA_IMAGENS
+    DIR_FRONT = PASTA_FRONTEND
+
+INDEX_HTML = os.path.join(DIR_FRONT, "index.html")
 
 # Lista contendo todas as figurinhas correspondentes aos slots do álbum
 figurinhas = [
@@ -58,14 +66,17 @@ figurinhas = [
 ]
 
 
-# Endpoint GET que retorna a lista de todas as figurinhas
 @app.get("/figurinhas")
 def listar_figurinhas():
     return figurinhas
 
 
-# Desenvolvimento local: FastAPI serve front + imagens.
-# Produção (Vercel): estáticos vêm de public/ via CDN; a function só atende a API.
-if not RODANDO_NA_VERCEL:
-    app.mount("/imgs", StaticFiles(directory=PASTA_IMAGENS), name="imgs")
-    app.mount("/", StaticFiles(directory=PASTA_FRONTEND, html=True), name="frontend")
+@app.get("/")
+def servir_album():
+    """Garante a home do álbum na Vercel (evita {"detail":"Not Found"})."""
+    return FileResponse(INDEX_HTML)
+
+
+# Imagens e demais estáticos (CSS/JS) — local e produção
+app.mount("/imgs", StaticFiles(directory=DIR_IMGS), name="imgs")
+app.mount("/", StaticFiles(directory=DIR_FRONT), name="frontend")
