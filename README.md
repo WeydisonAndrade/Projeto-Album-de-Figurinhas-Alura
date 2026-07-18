@@ -52,3 +52,5 @@ O projeto é estruturado em três arquivos fundamentais na pasta principal:
 * **JavaScript (ES6+)**: Consumo de API REST, controle assíncrono e eventos interativos.
 * **Web Audio API**: Síntese sonora procedural do efeito de papel.
 * **Biblioteca St.PageFlip**: Mecânica avançada para folheamento 3D.
+
+link: https://lnkd.in/dKJPcFGx
