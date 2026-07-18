@@ -10,17 +10,15 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Define o caminho absoluto da pasta de imagens (para encontrar a pasta independentemente de onde for executado)
+# Define o caminho absoluto das pastas (independente de onde o servidor for executado)
 PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
 PASTA_IMAGENS = os.path.join(PASTA_BASE, "figurinhas")
-
-# Configura o serviço de arquivos estáticos, montando a pasta de imagens na rota "/imgs"
-app.mount("/imgs", StaticFiles(directory=PASTA_IMAGENS), name="imgs")
+PASTA_FRONTEND = os.path.join(PASTA_BASE, "i-arq-ia-alura-album-main")
 
 # Lista contendo todas as figurinhas correspondentes aos slots do álbum
 figurinhas = [
@@ -55,8 +53,13 @@ figurinhas = [
     {"id": 29, "nome": "Rafaela Ballerini", "categoria": "BRASIL", "imagem_url": "/imgs/29-Rafa.jpeg"}
 ]
 
+
 # Endpoint GET que retorna a lista de todas as figurinhas
 @app.get("/figurinhas")
 def listar_figurinhas():
-    # Retorna a lista contendo as figurinhas cadastradas
     return figurinhas
+
+
+# Arquivos estáticos: imagens dos personagens e o frontend do álbum
+app.mount("/imgs", StaticFiles(directory=PASTA_IMAGENS), name="imgs")
+app.mount("/", StaticFiles(directory=PASTA_FRONTEND, html=True), name="frontend")

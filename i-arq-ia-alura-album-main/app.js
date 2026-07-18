@@ -1,68 +1,103 @@
 // ===================================================
 // CONFIGURAÇÃO DA API
-// A constante API_BASE_URL armazena o endereço do backend local.
-// Quando o frontend é servido pelo backend (ex: FastAPI), as URLs
-// podem ser relativas ou apontar para o endereço localhost.
+// Se o álbum for aberto pelo FastAPI (porta 8000), usa a mesma origem.
+// Caso contrário (Live Server, etc.), aponta para o backend local.
 // ===================================================
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = (() => {
+    const { protocol, port } = window.location;
+    if (protocol === "file:") return "http://localhost:8000";
+    if (port === "8000" || port === "") return "";
+    return "http://localhost:8000";
+})();
+
+// Fallback local: garante o mapeamento id → imagem mesmo se a API falhar
+const FIGURINHAS_FALLBACK = [
+    { id: 1, nome: "Alan Turing", imagem_url: "/imgs/01-alan-turing.jpg" },
+    { id: 2, nome: "John McCarthy", imagem_url: "/imgs/02-john-mccarthy.jpg" },
+    { id: 3, nome: "Sam Altman", imagem_url: "/imgs/03-sam.jpg" },
+    { id: 4, nome: "Geoffrey Hinton", imagem_url: "/imgs/04-Geoffrey.jpg" },
+    { id: 5, nome: "Yann LeCun", imagem_url: "/imgs/05-Yann.jpeg" },
+    { id: 6, nome: "Guido van Rossum", imagem_url: "/imgs/06-Guido.jpg" },
+    { id: 7, nome: "Tim Peters", imagem_url: "/imgs/07-Tim.jpeg" },
+    { id: 8, nome: "Raymond Hettinger", imagem_url: "/imgs/08-Ray.jpeg" },
+    { id: 9, nome: "Travis Oliphant", imagem_url: "/imgs/09-Travis.jpg" },
+    { id: 10, nome: "Wes McKinney", imagem_url: "/imgs/10-Wes.jpg" },
+    { id: 11, nome: "Edgar F. Codd", imagem_url: "/imgs/11-Edgar.jpeg" },
+    { id: 12, nome: "Larry Ellison", imagem_url: "/imgs/12-Larry.jpg" },
+    { id: 13, nome: "Michael Widenius", imagem_url: "/imgs/13-Michael.webp" },
+    { id: 14, nome: "Salvatore Sanfilippo", imagem_url: "/imgs/14-Salvatore.png" },
+    { id: 15, nome: "Eliot Horowitz", imagem_url: "/imgs/15-Eliot.png" },
+    { id: 16, nome: "Linus Torvalds", imagem_url: "/imgs/16-Linus.jpg" },
+    { id: 17, nome: "Dennis Ritchie", imagem_url: "/imgs/17-Dennis.png" },
+    { id: 18, nome: "Richard Stallman", imagem_url: "/imgs/18-Richard.jpg" },
+    { id: 19, nome: "Bill Gates", imagem_url: "/imgs/19-bill.jpg" },
+    { id: 20, nome: "Steve Jobs", imagem_url: "/imgs/20-Steve.webp" },
+    { id: 21, nome: "Paulo Silveira", imagem_url: "/imgs/21-Paulo.avif" },
+    { id: 22, nome: "Guilherme Silveira", imagem_url: "/imgs/22-Guilherme.jpeg" },
+    { id: 23, nome: "Gustavo Guanabara", imagem_url: "/imgs/23-Gus.png" },
+    { id: 24, nome: "Maurício Aniche", imagem_url: "/imgs/24-Mauricio.jpeg" },
+    { id: 25, nome: "Andre David", imagem_url: "/imgs/25-Andre.jpeg" },
+    { id: 26, nome: "Guilherme Lima", imagem_url: "/imgs/26-Guilherme.jpeg" },
+    { id: 27, nome: "Gi Space Coding", imagem_url: "/imgs/27-Gi.jpeg" },
+    { id: 28, nome: "Vinicius Neves", imagem_url: "/imgs/28-Vinicius.png" },
+    { id: 29, nome: "Rafaela Ballerini", imagem_url: "/imgs/29-Rafa.jpeg" }
+];
+
+function colarFigurinhaNoSlot(slot, figurinha) {
+    if (slot.querySelector(".sticker-img")) return;
+
+    const img = document.createElement("img");
+    img.src = `${API_BASE_URL}${figurinha.imagem_url}`;
+    img.alt = figurinha.nome;
+    img.className = "sticker-img";
+    img.loading = "lazy";
+
+    img.onload = () => slot.classList.add("slot-preenchido");
+    img.onerror = () => console.warn(`Imagem não encontrada: ${figurinha.nome} (${img.src})`);
+
+    slot.insertBefore(img, slot.firstChild);
+}
+
+function aplicarFigurinhasNosSlots(figurinhas) {
+    const porId = new Map(figurinhas.map(f => [f.id, f]));
+    const slots = document.querySelectorAll(".sticker-slot");
+    let coladas = 0;
+
+    for (const slot of slots) {
+        const slotNumeroEl = slot.querySelector(".slot-number");
+        if (!slotNumeroEl) continue;
+
+        const id = parseInt(slotNumeroEl.textContent.replace("#", ""), 10);
+        if (!porId.has(id)) continue;
+
+        colarFigurinhaNoSlot(slot, porId.get(id));
+        coladas += 1;
+    }
+
+    return coladas;
+}
 
 // ===================================================
 // FUNÇÃO: preencherFigurinhas()
-// Busca as figurinhas no backend, faz o mapeamento por ID,
-// e injeta dinamicamente as imagens nos slots HTML vazios correspondentes.
+// Busca as figurinhas no backend e cola a imagem de cada
+// personagem no slot correspondente (#01 → id 1, etc.).
 // ===================================================
 async function preencherFigurinhas() {
     try {
-        // 1. Faz uma requisição assíncrona GET para buscar as figurinhas
         const response = await fetch(`${API_BASE_URL}/figurinhas`);
 
         if (!response.ok) {
             throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
         }
 
-        // 2. Converte a resposta recebida em um array JSON
         const figurinhas = await response.json();
-
-        // 3. Cria um mapa (Map) de chave/valor (ID -> Dados da figurinha) para lookup O(1) rápido
-        //    Formato do map: 1 -> { id: 1, nome: "Alan Turing", imagem_url: "/imgs/01-alan-turing.jpg" }
-        const porId = new Map(figurinhas.map(f => [f.id, f]));
-
-        // 4. Seleciona todos os slots de figurinha vazios do DOM (.sticker-slot)
-        const slots = document.querySelectorAll(".sticker-slot");
-
-        // 5. Itera sobre cada slot encontrado
-        for (const slot of slots) {
-            const slotNumeroEl = slot.querySelector(".slot-number");
-            if (!slotNumeroEl) continue;
-
-            // Extrai o número ID do texto (exemplo: "#01" -> limpa o "#" -> converte em inteiro -> 1)
-            const id = parseInt(slotNumeroEl.textContent.replace("#", ""), 10);
-
-            // Se o mapa de figurinhas não contém este ID, ignora e pula para o próximo
-            if (!porId.has(id)) continue;
-
-            // Recupera as informações da figurinha no mapa
-            const figurinha = porId.get(id);
-
-            // Cria um novo elemento de imagem para colar no slot
-            const img = document.createElement("img");
-            img.src = `${API_BASE_URL}${figurinha.imagem_url}`;
-            img.alt = figurinha.nome;
-            img.className = "sticker-img";
-
-            // Se a imagem carregar com sucesso, adiciona classe que aplica o estilo "colado"
-            img.onload = () => slot.classList.add("slot-preenchido");
-            img.onerror = () => console.warn(`Imagem não encontrada: ${figurinha.nome}`);
-
-            // Insere o elemento da imagem como o primeiro filho do slot
-            slot.insertBefore(img, slot.firstChild);
-        }
-
-        console.log(`✅ ${figurinhas.length} figurinhas carregadas da API!`);
-
+        const coladas = aplicarFigurinhasNosSlots(figurinhas);
+        console.log(`✅ ${coladas} figurinhas coladas no álbum (API)!`);
     } catch (erro) {
         console.warn("⚠️  Não foi possível conectar à API do backend:", erro.message);
-        console.info("ℹ️  Inicie o servidor: cd backend/dia-3 && uvicorn main:app --reload");
+        const coladas = aplicarFigurinhasNosSlots(FIGURINHAS_FALLBACK);
+        console.info(`ℹ️  Fallback local: ${coladas} figurinhas aplicadas.`);
+        console.info("ℹ️  Para a API: na raiz do projeto, rode uvicorn main:app --reload");
     }
 }
 
@@ -71,7 +106,7 @@ async function preencherFigurinhas() {
 // Inicializa o álbum (PageFlip), configura o controle de arraste das páginas,
 // sintetizador de som (Web Audio API) e interações do teclado.
 // ===================================================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // Referências a elementos DOM chave da página
     const bookElement = document.getElementById("book");
     const btnPrev = document.getElementById("btn-prev");
@@ -82,6 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isMuted = false;
     let pageFlip = null;
+
+    // Cola as imagens nos slots ANTES do PageFlip capturar as páginas
+    await preencherFigurinhas();
 
     // ---------------------------------------------------
     // 1. INICIALIZAÇÃO DA BIBLIOTECA ST.PAGEFLIP
@@ -224,9 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Mostra o livro (oculto por padrão no carregamento CSS) após a inicialização perfeita
         bookElement.style.display = "block";
-
-        // Chama a função assíncrona para buscar e preencher as figurinhas via API (não bloqueia a UI)
-        preencherFigurinhas();
 
     } catch (error) {
         console.error("Erro ao inicializar a biblioteca PageFlip:", error);
