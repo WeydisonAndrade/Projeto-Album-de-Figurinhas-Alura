@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python scripts/prepare_public.py",
+  "functions": {
+    "main.py": {
+      "maxDuration": 10,
+      "excludeFiles": "{tests/**,.pytest_cache/**,**/__pycache__/**,scripts/**,.git/**}"
+    }
+  }
+}

@@ -4,10 +4,15 @@
 // Caso contrário (Live Server, etc.), aponta para o backend local.
 // ===================================================
 const API_BASE_URL = (() => {
-    const { protocol, port } = window.location;
+    const { protocol, hostname, port } = window.location;
+    // Arquivo aberto direto no navegador
     if (protocol === "file:") return "http://localhost:8000";
-    if (port === "8000" || port === "") return "";
-    return "http://localhost:8000";
+    // Local: mesma origem se já estiver no uvicorn; senão aponta para a API
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+        return (port === "8000" || port === "") ? "" : "http://localhost:8000";
+    }
+    // Produção (ex.: Vercel): front e API na mesma origem
+    return "";
 })();
 
 // Fallback local: garante o mapeamento id → imagem mesmo se a API falhar

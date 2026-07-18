@@ -20,6 +20,10 @@ PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
 PASTA_IMAGENS = os.path.join(PASTA_BASE, "figurinhas")
 PASTA_FRONTEND = os.path.join(PASTA_BASE, "i-arq-ia-alura-album-main")
 
+# Na Vercel, o front e as imagens saem de public/ (CDN).
+# Em desenvolvimento local, o FastAPI continua servindo esses estáticos.
+RODANDO_NA_VERCEL = bool(os.getenv("VERCEL"))
+
 # Lista contendo todas as figurinhas correspondentes aos slots do álbum
 figurinhas = [
     {"id": 1, "nome": "Alan Turing", "categoria": "IA", "imagem_url": "/imgs/01-alan-turing.jpg"},
@@ -60,6 +64,8 @@ def listar_figurinhas():
     return figurinhas
 
 
-# Arquivos estáticos: imagens dos personagens e o frontend do álbum
-app.mount("/imgs", StaticFiles(directory=PASTA_IMAGENS), name="imgs")
-app.mount("/", StaticFiles(directory=PASTA_FRONTEND, html=True), name="frontend")
+# Desenvolvimento local: FastAPI serve front + imagens.
+# Produção (Vercel): estáticos vêm de public/ via CDN; a function só atende a API.
+if not RODANDO_NA_VERCEL:
+    app.mount("/imgs", StaticFiles(directory=PASTA_IMAGENS), name="imgs")
+    app.mount("/", StaticFiles(directory=PASTA_FRONTEND, html=True), name="frontend")

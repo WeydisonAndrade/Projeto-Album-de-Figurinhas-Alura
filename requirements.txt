@@ -1,5 +1,1 @@
-fastapi
-uvicorn
-pytest
-httpx
-beautifulsoup4
+fastapi>=0.115.0
